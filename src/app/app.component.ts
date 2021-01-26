@@ -57,7 +57,56 @@ export class AppComponent implements OnInit, AfterViewInit{
     this.dataSource.sort = this.sort;
   }
 
-  
+  searchData(){
+    console.log(this.filterForm.value)
+    if(this.filterForm.value.department && !this.filterForm.value.search){
+      this.departmentChange(this.filterForm.value.department)
+    }
+    if(this.filterForm.value.search && !this.filterForm.value.department){
+      this.applyFilter(this.filterForm.value.search)
+    }
+    if(this.filterForm.value.department && this.filterForm.value.search){
+      let sortData:any=[]
+      let department=this.filterForm.value.department
+      let filterValue=this.filterForm.value.search
+       this.employeesData.forEach(element => {
+        console.log(element.departments)
+        element.departments.forEach(elmt=>{
+          console.log(elmt,elmt===department)
+          if(elmt===department){
+            sortData.push(element)
+          }
+        })
+      });
+      if(sortData){
+        this.dataSource = new MatTableDataSource(sortData);
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
+      }     
+    }
+  }
+  departmentChange(department){
+    console.log(department)
+    let sortData:any=[]
+     this.employeesData.forEach(element => {
+      console.log(element.departments)
+      element.departments.forEach(elmt=>{
+        console.log(elmt,elmt===department)
+        if(elmt===department){
+          sortData.push(element)
+        }
+      })
+    });
+    this.dataSource=sortData
+  }
+  applyFilter(filterValue) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
   reset(){
     this.filterForm.reset()
