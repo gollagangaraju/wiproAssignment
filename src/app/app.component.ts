@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {MatTableDataSource} from '@angular/material/table';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 
@@ -99,7 +99,13 @@ export class AppComponent implements OnInit, AfterViewInit{
         }
       })
     });
-    this.dataSource=sortData
+    if(sortData){
+      this.dataSource = new MatTableDataSource(sortData);
+      // this.dataSource.filter = filterValue.trim().toLowerCase();
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
+    } 
   }
   applyFilter(filterValue) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
